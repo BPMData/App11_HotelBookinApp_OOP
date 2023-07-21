@@ -1,0 +1,24 @@
+
+item = int(input("Please enter the item ID of the item you'd like to purchase: ")
+quantity = int(input("Please enter how many of this item you'd like to purchase: ")
+
+user_receipt = Receipt()
+total = user_receipt.total(item, quantity)
+
+doublecheck = input(f"Your total will be ${total} for {quantity} of {item}. Would you like to continue?").upper()
+
+if Y:
+	user_receipt.generate(item, quantity)
+	print("User receipt generated as a PDF.")
+	inv = Inventory()
+	inv.save_changes(item, quantity)
+	print("Inventory updated. Have a nice day."
+
+else:
+	item = int(input("Please enter the item ID of the item you'd like to purchase: ")
+	quantity = int(input("Please enter how many of this item you'd like to purchase: ")
+
+	user_receipt = Receipt()
+	total = user_receipt.total(item, quantity)
+
+	doublecheck = input(f"Your total will be ${total} for {quantity} of {item}. Would you like to continue?").upper()

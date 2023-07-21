@@ -1,45 +1,36 @@
-import pandas as pd
-
-df = pd.read_csv("hotels.csv")
-class Hotel:
-    def __init__(self, hotel_id):
-        self.hotel_id = hotel_id
-        self.name = df.loc[df["id"] == self.hotel_id, "name"].squeeze()
-    def book(self):
-        """Book a hotel by changing its availability to no"""
-        df.loc[df['id'] == self.hotel_id, 'available'] = 'no'
-        df.to_csv('hotels.csv', index=False)
-
-    def available(self):
-        """Check if the hotel is available"""
-        availability = df.loc[df['id'] == self.hotel_id, "available"].squeeze()
-        if availability == 'yes':
-            return True
-        else:
-            return False
-
-
-class ReservationTicket:
-    def __init__(self, customer_name, hotel_object):
-        self.customer_name = customer_name
-        self.hotel = hotel_object
-    def generate(self):
-        content = f"""
-        Thank you for your reservation, {self.customer_name}.
-        You will be staying at {self.hotel.name}.
-        """
-        return content
+from source_hotel import df, ReservationTicket, Hotel, SecureCreditCard, Spa
 
 print(df)
 hotel_input = int(input("Enter the ID of the hotel: "))
 
+hotel_booked = False
+
 hotel = Hotel(hotel_input)
 if hotel.available():
-    hotel.book()
-    name = input('Enter your name: ')
-    reservation = ReservationTicket(customer_name=name, hotel_object=hotel)
-    print(reservation.generate())
+    credit = SecureCreditCard(number="1234567890123456")
+    if credit.validate(expiration="12/28", holder="JANE DOE", cvc="456"):
+            password = input("Please enter your password. Passwords are case sensitive: ")
+            if  credit.authenticate(password):
+                hotel.book()
+                print("Your credit card successfully validated.")
+                name = input('Enter your name: ')
+                reservation = ReservationTicket(name, hotel)
+                print(reservation.generate())
+                hotel_booked = True
+            else:
+                print("The entered password was incorrect.")
+    else:
+        print("There was a problem with the credit card you entered.")
 else:
     print("Hotel is not free.")
 
-1
+if hotel_booked:
+    spa_decision = input("Would you like to book a spa package? Please type Y or N: ").upper()
+    if spa_decision == "Y":
+        spa = Spa(hotel, name)
+        spa.book()
+        spaticket = spa.ticketgenerate()
+        print(spaticket)
+        hotel_booked = False
+    else:
+       print("Understandable. Have a nice day.")
